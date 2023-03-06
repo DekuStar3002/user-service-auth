@@ -28,9 +28,9 @@ const loginUser = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const token = await userService.loginUser(username, password);
-    res.cookie('jwt', token, { maxAge: 1000 * 60 * 60, httpOnly: true });
     res.status(200).json({
-      message: 'user successfully login'
+      message: 'user successfully login',
+      token: token
     });
   } catch (error) {
     if(error instanceof CustomError){
@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
 
 const validateUser = async (req, res) => {
   try {
-    const token = req.cookies.jwt;
+    const token = req.headers.authoriztion;
     const valid = await userService.validateUser(token);
     res.status(200).json({
       user: valid
